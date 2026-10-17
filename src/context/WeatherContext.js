@@ -1,73 +1,110 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-
+import { Alert } from 'react-native';
+import * as Location from 'expo-location';
+import { fetchWeather, searchCities } from '../services/weatherApi';
+ 
 const WeatherContext = createContext(null);
-
+ 
 const DEFAULT_LOCATION = {
+  id: 'default',
   name: 'São Paulo',
   country: 'Brasil',
   latitude: -23.5505,
   longitude: -46.6333,
 };
-
+ 
 export function WeatherProvider({ children }) {
   const [location, setLocation] = useState(DEFAULT_LOCATION);
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const fetchWeather = useCallback(async (loc) => {
+ 
+  // Define o local e carrega a previsão dele
+  const load = useCallback(async (loc) => {
+    setLocation(loc);
     setLoading(true);
     setError(null);
     try {
-      const url =
-        `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}` +
-        `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m` +
-        `&hourly=temperature_2m,weather_code,precipitation_probability` +
-        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-        `&timezone=auto&forecast_days=7`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('Falha ao buscar o clima');
-      setWeather(await res.json());
+      setWeather(await fetchWeather(loc));
     } catch (e) {
       setError(e.message || 'Erro desconhecido');
     } finally {
       setLoading(false);
     }
   }, []);
-
+ 
+  // Usa a localização atual do aparelho
+  const locateMe = useCallback(async () => {
+    setError(null);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permissão negada', 'Permita o acesso à localização nas configurações do aparelho.');
+        return;
+      }
+ 
+      const enabled = await Location.hasServicesEnabledAsync();
+      if (!enabled) {
+        Alert.alert('GPS desligado', 'Ative a localização do aparelho e tente de novo.');
+        return;
+      }
+ 
+      let pos;
+      try {
+        pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      } catch {
+        pos = await Location.getLastKnownPositionAsync();
+      }
+      if (!pos) {
+        Alert.alert(
+          'Localização indisponível',
+          'Não foi possível obter sua posição agora. Verifique o GPS ou busque a cidade pelo nome.'
+        );
+        return;
+      }
+ 
+      const { latitude, longitude } = pos.coords;
+      let name = 'Minha localização';
+      let country = '';
+      try {
+        const [place] = await Location.reverseGeocodeAsync({ latitude, longitude });
+        if (place) {
+          name = place.city || place.subregion || place.region || name;
+          country = place.country || '';
+        }
+      } catch {}
+      await load({ id: 'me', name, country, latitude, longitude });
+    } catch (e) {
+      Alert.alert('Erro de localização', e.message || 'Não foi possível obter a localização.');
+    }
+  }, [load]);
+ 
+  // Carrega o local inicial uma única vez
   useEffect(() => {
-    fetchWeather(location);
-  }, [location, fetchWeather]);
-
-  // Busca cidades pelo nome. Retorna uma lista de locais.
-  const searchCity = useCallback(async (query) => {
-    const q = (query || '').trim();
-    if (!q) return [];
-    const res = await fetch(
-      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=8&language=pt`
-    );
-    const data = await res.json();
-    return (data.results || []).map((r) => ({
-      name: r.name,
-      country: r.country,
-      admin: r.admin1,
-      latitude: r.latitude,
-      longitude: r.longitude,
-    }));
-  }, []);
-
-  const selectLocation = useCallback((loc) => setLocation(loc), []);
-  const refresh = useCallback(() => fetchWeather(location), [fetchWeather, location]);
-
+    load(DEFAULT_LOCATION);
+  }, [load]);
+ 
+  const refresh = useCallback(() => load(location), [load, location]);
+ 
   return (
     <WeatherContext.Provider
-      value={{ location, weather, loading, error, searchCity, selectLocation, refresh }}
+      value={{
+        location,
+        weather,
+        loading,
+        error,
+        load,
+        locateMe,
+        refresh,
+        searchCity: searchCities,
+        selectLocation: load,
+      }}
     >
       {children}
     </WeatherContext.Provider>
   );
 }
-
+ 
 export function useWeather() {
   const ctx = useContext(WeatherContext);
   if (!ctx) throw new Error('useWeather precisa estar dentro de <WeatherProvider>');

@@ -10,8 +10,11 @@ export async function searchCities(query) {
   if (!res.ok) throw new Error('Falha ao buscar cidades');
   const data = await res.json();
   return (data.results || []).map((r) => ({
+    id: String(r.id ?? `${r.latitude},${r.longitude}`),
     name: r.name,
     country: r.country,
+    country_code: r.country_code,
+    admin1: r.admin1,
     admin: r.admin1,
     state: r.admin1,
     latitude: r.latitude,
