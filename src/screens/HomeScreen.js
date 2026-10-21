@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useWeather } from '../context/WeatherContext';
 import { colors } from '../utils/theme';
 import { describeWeather } from '../utils/weather';
+import { StatusBar } from 'expo-status-bar';
 
 export default function HomeScreen() {
   const { location, weather, loading, error, refresh } = useWeather();
@@ -30,25 +31,34 @@ export default function HomeScreen() {
   const info = describeWeather(c.weather_code);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={colors.primary} />}
-      >
-        <Text style={styles.city}>{location.name}</Text>
-        <Text style={styles.country}>{location.country}</Text>
 
-        <Ionicons name={info.icon} size={96} color={colors.primary} style={{ marginTop: 24 }} />
-        <Text style={styles.temp}>{Math.round(c.temperature_2m)}°</Text>
-        <Text style={styles.desc}>{info.label}</Text>
+    <View style={styles.container}>
 
-        <View style={styles.row}>
-          <Stat icon="thermometer" label="Sensação" value={`${Math.round(c.apparent_temperature)}°`} />
-          <Stat icon="water" label="Umidade" value={`${c.relative_humidity_2m}%`} />
-          <Stat icon="flag" label="Vento" value={`${Math.round(c.wind_speed_10m)} km/h`} />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <View style={styles.ajusta_tela}>
+
+        <ScrollView
+          contentContainerStyle={styles.content}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={colors.primary} />}
+        >
+
+          <Text style={styles.city}>{location.name}</Text>
+          <Text style={styles.country}>{location.country}</Text>
+
+          <Ionicons name={info.icon} size={96} color={colors.primary} style={{ marginTop: 24 }} />
+          <Text style={styles.temp}>{Math.round(c.temperature_2m)}°</Text>
+          <Text style={styles.desc}>{info.label}</Text>
+
+          <View style={styles.row}>
+            <Stat icon="thermometer" label="Sensação" value={`${Math.round(c.apparent_temperature)}°`} />
+            <Stat icon="water" label="Umidade" value={`${c.relative_humidity_2m}%`} />
+            <Stat icon="flag" label="Vento" value={`${Math.round(c.wind_speed_10m)} km/h`} />
+          </View>
+
+
+        </ScrollView>
+      </View>
+    </View>
+
   );
 }
 
@@ -63,17 +73,89 @@ function Stat({ icon, label, value }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  center: { alignItems: 'center', justifyContent: 'center' },
-  content: { alignItems: 'center', padding: 24 },
-  city: { color: colors.text, fontSize: 30, fontWeight: '700', marginTop: 16 },
-  country: { color: colors.textSecondary, fontSize: 16 },
-  temp: { color: colors.text, fontSize: 80, fontWeight: '200' },
-  desc: { color: colors.textSecondary, fontSize: 20 },
-  row: { flexDirection: 'row', gap: 12, marginTop: 32 },
-  stat: { flex: 1, backgroundColor: colors.card, borderRadius: 16, padding: 16, alignItems: 'center', gap: 6 },
-  statValue: { color: colors.text, fontSize: 18, fontWeight: '600' },
-  statLabel: { color: colors.textSecondary, fontSize: 12 },
-  error: { color: '#F87171', fontSize: 16, marginBottom: 12 },
-  link: { color: colors.primary, fontSize: 16 },
+
+  container: { 
+    flex: 1, 
+    backgroundColor: 
+    colors.background 
+  },
+
+  center: { 
+    alignItems: 'center', 
+    justifyContent: 'center' 
+  },
+
+  ajusta_tela: {
+
+    flex: 1,
+
+  },
+
+  content: { 
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+
+  city: { 
+    color: colors.text, 
+    fontSize: 30, 
+    fontWeight: '700', 
+    marginTop: 16
+  },
+
+  country: { 
+    color: colors.textSecondary, 
+    fontSize: 16 
+  },
+
+  temp: { 
+    color: colors.text, 
+    fontSize: 80, 
+    fontWeight: '200' 
+  },
+
+  desc: { 
+    color: colors.textSecondary, 
+    fontSize: 20 
+  },
+
+  row: { 
+    flexDirection: 'row', 
+    gap: 12, 
+    marginTop: 32 
+  },
+
+  stat: { 
+    flex: 1, 
+    backgroundColor: colors.card, 
+    borderRadius: 16, 
+    padding: 16, 
+    alignItems: 'center', 
+    gap: 6 
+  },
+
+  statValue: { 
+    color: colors.text, 
+    fontSize: 18, 
+    ontWeight: '600'
+  },
+
+  statLabel: { 
+    color: colors.textSecondary, 
+    fontSize: 12 
+  },
+
+  error: { 
+    olor: '#F87171', 
+    fontSize: 16, 
+    marginBottom: 12 
+  },
+
+  link: { 
+    color: colors.primary, 
+    fontSize: 16 
+  },
+
 });

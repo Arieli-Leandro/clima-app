@@ -36,7 +36,7 @@ export default function DailyScreen() {
   }));
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Próximos 7 dias</Text>
       <Text style={styles.subtitle}>{location.name}</Text>
       <FlatList

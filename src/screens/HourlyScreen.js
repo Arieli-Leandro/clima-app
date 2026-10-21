@@ -27,9 +27,12 @@ export default function HourlyScreen() {
   }));
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <Text style={styles.title}>Próximas 24 horas</Text>
-      <Text style={styles.subtitle}>{location.name}</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.barra_navegacao}>
+        <Text style={styles.title}>Próximas 24 horas</Text>
+        <Text style={styles.subtitle}>{location.name}</Text>
+      </View>
+      
       <FlatList
         data={items}
         keyExtractor={(item) => item.time}
@@ -48,15 +51,62 @@ export default function HourlyScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  center: { alignItems: 'center', justifyContent: 'center' },
-  title: { color: colors.text, fontSize: 24, fontWeight: '700', paddingHorizontal: 16, paddingTop: 16 },
-  subtitle: { color: colors.textSecondary, paddingHorizontal: 16 },
-  row: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: colors.card, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16,
+
+  container: { 
+    flex: 1, 
+    backgroundColor: colors.background 
   },
-  hour: { color: colors.text, fontSize: 16, width: 60 },
-  rain: { color: colors.textSecondary, width: 50, textAlign: 'center' },
-  temp: { color: colors.text, fontSize: 18, fontWeight: '600', width: 50, textAlign: 'right' },
+
+  center: { alignItems: 'center', justifyContent: 'center' },
+
+  title: { 
+    color: colors.text, 
+    fontSize: 24, 
+    fontWeight: '700', 
+    paddingHorizontal: 16, 
+    paddingTop: 16 
+  },
+
+  subtitle: { 
+    color: colors.textSecondary, 
+    paddingHorizontal: 16 
+  },
+
+  row: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
+    backgroundColor: colors.card, 
+    borderRadius: 14, 
+    paddingVertical: 14, 
+    paddingHorizontal: 16,
+  },
+
+  hour: { 
+    color: colors.text, 
+    fontSize: 16, 
+    width: 60 
+  },
+
+  rain: { 
+    color: colors.textSecondary, 
+    width: 50, 
+    textAlign: 'center' 
+  },
+
+  temp: { 
+    color: colors.text, 
+    fontSize: 18, 
+    fontWeight: '600', 
+    width: 50, 
+    textAlign: 'right' 
+  },
+
+  barra_navegacao : {
+
+    paddingBottom: 8,
+
+
+  }
+
 });

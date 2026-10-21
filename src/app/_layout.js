@@ -16,8 +16,7 @@ export default function RootLayout() {
       <StatusBar style="light" />
       <Tabs
         screenOptions={{
-          headerStyle: { backgroundColor: colors.bg },
-          headerTintColor: colors.text,
+          headerShown: false,
           tabBarStyle: { backgroundColor: colors.card, borderTopColor: colors.line },
           tabBarActiveTintColor: colors.accent,
           tabBarInactiveTintColor: colors.muted,

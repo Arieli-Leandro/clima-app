@@ -44,17 +44,24 @@ export default function SearchScreen() {
   }
 
   return (
+
     <View style={styles.screen}>
-      <TextInput
-        style={styles.input}
-        placeholder="Buscar cidade (ex.: Londrina)"
-        placeholderTextColor={colors.muted}
-        value={query}
-        onChangeText={setQuery}
-        onSubmitEditing={onSearch}
-        returnKeyType="search"
-        autoCorrect={false}
-      />
+
+      <View style={styles.container_busca}>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Buscar cidade (ex.: Londrina)"
+          placeholderTextColor={'#FFFFFF'}
+          value={query}
+          onChangeText={setQuery}
+          onSubmitEditing={onSearch}
+          returnKeyType="search"
+          autoCorrect={false}
+        />
+
+      </View>
+
       <View style={styles.actions}>
         <Pressable style={styles.btn} onPress={onSearch}>
           <Text style={styles.btnText}>Buscar</Text>
@@ -83,14 +90,75 @@ export default function SearchScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg, padding: 16 },
-  input: { backgroundColor: colors.card, color: colors.text, borderRadius: 10, padding: 14, fontSize: 16, borderWidth: 1, borderColor: colors.line },
-  actions: { flexDirection: 'row', gap: 10, marginTop: 10 },
-  btn: { backgroundColor: colors.accent, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 10 },
-  btnAlt: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line },
-  btnText: { color: colors.bg, fontWeight: '700' },
-  message: { color: colors.error, marginTop: 14 },
-  item: { backgroundColor: colors.card, borderRadius: 10, padding: 14, marginBottom: 8 },
-  itemName: { color: colors.text, fontSize: 16, fontWeight: '600' },
-  itemSub: { color: colors.muted, fontSize: 13, marginTop: 2 },
+
+  screen: { 
+    flex: 1, 
+    backgroundColor: '#0F172A', 
+    padding: 16 
+  },
+
+  container_busca: {
+    paddingTop: 30,
+  },
+
+  input: { 
+    backgroundColor: colors.card, 
+    color: '#FFFFFF', 
+    borderRadius: 10, 
+    padding: 14, 
+    fontSize: 16, 
+    borderWidth: 1, 
+    borderColor: colors.line 
+  },
+
+  actions: { 
+    flexDirection: 'row', 
+    gap: 10, 
+    marginTop: 10 
+  },
+
+  btn: {
+    backgroundColor: colors.card, 
+    paddingHorizontal: 16, 
+    paddingVertical: 12, 
+    borderRadius: 10,
+    borderColor: colors.line,
+    borderWidth: 1,
+  },
+
+  btnAlt: { 
+    backgroundColor: colors.card, 
+    borderWidth: 1, 
+    borderColor: colors.line
+  },
+
+  btnText: { 
+    color: "#FFFFFF", 
+    fontWeight: '700' 
+  },
+
+  message: { 
+    color: "#FFFFFF", 
+    marginTop: 14 
+  },
+
+  item: { 
+    backgroundColor: colors.card, 
+    borderRadius: 10, 
+    padding: 14, 
+    marginBottom: 8 
+  },
+
+  itemName: { 
+    color: colors.text, 
+    fontSize: 16, 
+    fontWeight: '600' 
+  },
+
+  itemSub: { 
+    color: "#ffffff93", 
+    fontSize: 13,
+    marginTop: 2 
+  },
+
 });
