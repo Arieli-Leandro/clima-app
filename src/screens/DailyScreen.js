@@ -1,18 +1,10 @@
-import React from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { useWeather } from '../context/WeatherContext';
+import { dayName } from '../utils/dayName';
 import { colors } from '../utils/theme';
 import { describeWeather } from '../utils/weather';
-
-const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-
-function dayName(dateStr, index) {
-  if (index === 0) return 'Hoje';
-  const [y, m, d] = dateStr.split('-').map(Number);
-  return DIAS[new Date(y, m - 1, d).getDay()];
-}
 
 export default function DailyScreen() {
   const { weather, loading, location } = useWeather();
